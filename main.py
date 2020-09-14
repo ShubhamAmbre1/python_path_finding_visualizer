@@ -21,6 +21,9 @@ class Block:
     def add_black(self):
         self.color = BLACK
 
+    def remove_black(self):
+        self.color = WHITE
+
     def make_block(self):
         pygame.draw.rect(WIN, self.color, (self.x,
                                            self.y, self.diff, self.diff))
@@ -79,12 +82,19 @@ def main(win, width):
             if event.type == pygame.QUIT:
                 running = False
 
-            # Mouse click event
+            # Mouse left click event
             if pygame.mouse.get_pressed()[0]:
                 row, col = get_mouse_pos(grid, win, width, rows)
                 spot = grid[row][col]
 
                 spot.add_black()
+
+            # Mouse right click event
+            if pygame.mouse.get_pressed()[2]:
+                row, col = get_mouse_pos(grid, win, width, rows)
+                spot = grid[row][col]
+
+                spot.remove_black()
 
         pygame.display.update()
 
