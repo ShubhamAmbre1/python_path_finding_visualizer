@@ -8,6 +8,8 @@ pygame.display.set_caption("Path Finding Visualizer")
 # COLORs
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 
 class Block:
@@ -21,12 +23,18 @@ class Block:
     def add_black(self):
         self.color = BLACK
 
-    def remove_black(self):
+    def remove_color(self):
         self.color = WHITE
 
+    def add_start(self):
+        self.color = BLUE
+
+    def add_end(self):
+        self.color = RED
+
     def make_block(self):
-        pygame.draw.rect(WIN, self.color, (self.x,
-                                           self.y, self.diff, self.diff))
+        pygame.draw.rect(
+            WIN, self.color, (self.x, self.y, self.diff, self.diff))
 
 
 def make_grid(win, width, rows):
@@ -71,7 +79,9 @@ def draw(win, width, rows, grid):
 
 def main(win, width):
     running = True
-    rows = 30  # No. of rows and columns
+    rows = 60  # No. of rows and columns
+    start_node = 0
+    end_node = 0
 
     # To make blocks on the screen
     grid = make_grid(win, width, rows)
@@ -87,14 +97,36 @@ def main(win, width):
                 row, col = get_mouse_pos(grid, win, width, rows)
                 spot = grid[row][col]
 
-                spot.add_black()
+                if start_node == 0 and spot.color == WHITE:
+                    spot.add_start()
+                    start_node = 1
+
+                if end_node == 0 and spot.color == WHITE:
+                    spot.add_end()
+                    end_node = 1
+
+                if spot.color == RED:
+                    spot.add_end()
+
+                if spot.color == BLUE:
+                    spot.add_start()
+
+                if spot.color == WHITE:
+                    spot.add_black()
 
             # Mouse right click event
             if pygame.mouse.get_pressed()[2]:
                 row, col = get_mouse_pos(grid, win, width, rows)
                 spot = grid[row][col]
 
-                spot.remove_black()
+                if spot.color == BLUE:
+                    spot.remove_color()
+                    start_node = 0
+                elif spot.color == RED:
+                    spot.remove_color()
+                    end_node = 0
+                else:
+                    spot.remove_color()
 
         pygame.display.update()
 
