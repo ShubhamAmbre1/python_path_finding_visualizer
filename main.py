@@ -77,6 +77,10 @@ def draw(win, width, rows, grid):
     pygame.display.update()
 
 
+def algorithm():
+    pass
+
+
 def main(win, width):
     running = True
     rows = 60  # No. of rows and columns
@@ -127,6 +131,14 @@ def main(win, width):
                     end_node = 0
                 else:
                     spot.remove_color()
+
+            # To start the algorithm
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    for row in grid:
+                        for block in row:
+                            block.update_neighbors(grid)
+                    algorithm()
 
         pygame.display.update()
 
