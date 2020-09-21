@@ -14,11 +14,14 @@ BLUE = (0, 0, 255)
 
 class Block:
     def __init__(self, x, y, diff, rows):
+        self.row = x
+        self.col = y
         self.x = x * diff
         self.y = y * diff
         self.diff = diff
         self.rows = rows
         self.color = WHITE
+        self.neighbors = []
 
     def add_black(self):
         self.color = BLACK
@@ -35,6 +38,24 @@ class Block:
     def make_block(self):
         pygame.draw.rect(
             WIN, self.color, (self.x, self.y, self.diff, self.diff))
+
+    def barrier(self):
+        return self.color == BLACK
+
+    def update_neighbors(self, grid):
+        self.neighbors = []
+        if self.row < self.rows - 1 and not grid[self.row + 1][self.col].barrier():
+            self.neighbors.append(grid[self.row + 1][self.col])
+
+        if self.row > 0 and not grid[self.row - 1][self.col].barrier():
+            self.neighbors.append(grid[self.row - 1][self.col])
+
+        if self.col < self.rows - 1 and not grid[self.row][self.col + 1].barrier():
+            self.neighbors.append(grid[self.row][self.col + 1])
+
+        if self.col > 0 and not grid[self.row][self.col - 1].barrier():
+            self.neighbors.append(grid[self.row][self.col - 1])
+        print(self.neighbors)
 
 
 def make_grid(win, width, rows):
@@ -83,7 +104,7 @@ def algorithm():
 
 def main(win, width):
     running = True
-    rows = 60  # No. of rows and columns
+    rows = 40  # No. of rows and columns
     start_node = 0
     end_node = 0
 
