@@ -1,4 +1,6 @@
 import pygame
+from algorithms import algorithm
+
 
 WIDTH = 600
 WIN = pygame.display.set_mode((WIDTH, WIDTH))
@@ -10,6 +12,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
 
 
 class Block:
@@ -42,6 +45,12 @@ class Block:
     def barrier(self):
         return self.color == BLACK
 
+    def set_visited(self):
+        self.color = YELLOW
+
+    def is_visited(self):
+        return self.color == YELLOW
+
     def update_neighbors(self, grid):
         self.neighbors = []
         if self.row < self.rows - 1 and not grid[self.row + 1][self.col].barrier():
@@ -55,7 +64,7 @@ class Block:
 
         if self.col > 0 and not grid[self.row][self.col - 1].barrier():
             self.neighbors.append(grid[self.row][self.col - 1])
-        print(self.neighbors)
+        #print(len(self.neighbors))
 
 
 def make_grid(win, width, rows):
@@ -96,10 +105,6 @@ def draw(win, width, rows, grid):
 
     draw_grid(win, width, rows)
     pygame.display.update()
-
-
-def algorithm():
-    pass
 
 
 def main(win, width):
@@ -159,7 +164,7 @@ def main(win, width):
                     for row in grid:
                         for block in row:
                             block.update_neighbors(grid)
-                    algorithm()
+                    algorithm(grid, win, lambda: draw(win, width, rows, grid))
 
         pygame.display.update()
 
